@@ -25,7 +25,7 @@ class AQGraphViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.title = cityName + "AQI Data"
+        self.title = cityName + " AQI Data"
         self.createStockChart()
         self.initViewModel()
     }
