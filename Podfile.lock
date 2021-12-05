@@ -1,0 +1,20 @@
+PODS:
+  - Starscream (4.0.4)
+  - SwiftChart (1.0.1)
+
+DEPENDENCIES:
+  - Starscream (~> 4.0.0)
+  - SwiftChart
+
+SPEC REPOS:
+  trunk:
+    - Starscream
+    - SwiftChart
+
+SPEC CHECKSUMS:
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  SwiftChart: ba767a678d568a5ee22d419e146a0582865e1aff
+
+PODFILE CHECKSUM: 9b8735645b91535f85e3d647b55236cbb4d3d4a0
+
+COCOAPODS: 1.10.2
