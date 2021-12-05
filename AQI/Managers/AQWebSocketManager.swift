@@ -50,6 +50,20 @@ class AQWebSocketManager: NSObject {
         self.timer?.invalidate()
         self.timer = nil
     }
+    
+    /// Convert the text into dictionary
+    /// - Parameter text: response text
+    /// - Returns: return the array of dictionary
+    func convertToDictionary(text: String) -> [[String: Any]]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
 }
 
 extension AQWebSocketManager: WebSocketDelegate {
@@ -63,7 +77,9 @@ extension AQWebSocketManager: WebSocketDelegate {
           print("disconnected \(reason) \(closeCode)")
         case .text(let text):
           print("received text: \(text)")
-            self.delegate?.updateReceivedData(dataText: text)
+            if let arrayOfCity = convertToDictionary(text: text) {
+                self.delegate?.updateReceivedData(arrayOfCity: arrayOfCity)
+            }
         case .binary(let data):
           print("received data: \(data)")
         case .pong(let pongData):

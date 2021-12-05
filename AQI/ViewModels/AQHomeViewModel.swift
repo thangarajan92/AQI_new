@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AQHomeViewModelProtocol: class {
-    func updateReceivedData(dataText: String)
+    func updateReceivedData(arrayOfCity: [[String: Any]])
 }
 
 class AQHomeViewModel: NSObject {
@@ -19,35 +19,27 @@ class AQHomeViewModel: NSObject {
     init(parent: AQHomeProtocol?) {
         super.init()
         self.delegate = parent
-        AQWebSocketManager.shared.makeRequest(parent: self)
-        AQWebSocketManager.shared.startConnection(timerInterval: 60)
+        self.reInitiateManager()
     }
     
-    func convertToDictionary(text: String) -> [[String: Any]]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
+    /// Reinitiate the socket 
+    func reInitiateManager() {
+        AQWebSocketManager.shared.makeRequest(parent: self)
+        AQWebSocketManager.shared.startConnection(timerInterval: 60)
     }
 }
 
 extension AQHomeViewModel: AQHomeViewModelProtocol {
-    func updateReceivedData(dataText: String) {
-        if let arrayOfCity = convertToDictionary(text: dataText) {
-            for cityValues in arrayOfCity {
-                let model = AQCityModel(dic: cityValues)
-                if let index = self.cityArray.firstIndex(where: { (cModel) -> Bool in
-                    cModel.city == model.city}) {
-                    self.cityArray[index] = model
-                } else {
-                    self.cityArray.append(model)
-                }
+    func updateReceivedData(arrayOfCity: [[String: Any]]) {
+        for cityValues in arrayOfCity {
+            let model = AQCityModel(dic: cityValues)
+            if let index = self.cityArray.firstIndex(where: { (cModel) -> Bool in
+                cModel.city == model.city}) {
+                self.cityArray[index] = model
+            } else {
+                self.cityArray.append(model)
             }
-            self.delegate?.reloadTableView()
         }
+        self.delegate?.reloadTableView()
     }
 }

@@ -19,30 +19,14 @@ class AQGraphViewModel: NSObject {
         AQWebSocketManager.shared.makeRequest(parent: self)
         AQWebSocketManager.shared.startConnection(timerInterval: 30)
     }
-    
-    /// Convert the text into dictionary
-    /// - Parameter text: response text
-    /// - Returns: return the array of dictionary
-    func convertToDictionary(text: String) -> [[String: Any]]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
 }
 
 extension AQGraphViewModel: AQHomeViewModelProtocol {
-    func updateReceivedData(dataText: String) {
-        if let arrayOfCity = convertToDictionary(text: dataText) {
-            for cityValues in arrayOfCity {
-                let model = AQCityModel(dic: cityValues)
-                if model.city == selectedCity, let aqi = model.aqi {
-                    self.delegate?.reloadChart(aqi: aqi)
-                }
+    func updateReceivedData(arrayOfCity: [[String: Any]]) {
+        for cityValues in arrayOfCity {
+            let model = AQCityModel(dic: cityValues)
+            if model.city == selectedCity, let aqi = model.aqi {
+                self.delegate?.reloadChart(aqi: aqi)
             }
         }
     }

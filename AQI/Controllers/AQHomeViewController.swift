@@ -31,7 +31,7 @@ class AQHomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AQWebSocketManager.shared.startConnection(timerInterval: 60)
+        self.homeViewModel?.reInitiateManager()
     }
 }
 
